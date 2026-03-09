@@ -37,7 +37,7 @@ struct device;
 enum operation;
 
 static void fail(char *, ...);
-static void usage(void);
+static void usage(FILE *);
 static float parse_exponent(const char *);
 #define cat_with(...) _cat_with(__VA_ARGS__, NULL)
 static char *_cat_with(char, ...);
@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
 				p.exponent = 4;
 			break;
 		case 'h':
-			usage();
+			usage(stdout);
 			exit(EXIT_SUCCESS);
 		case 'c':
 			p.class = strdup(optarg);
@@ -194,7 +194,7 @@ int main(int argc, char **argv) {
 		}
 	}
 	if (phelp) {
-		usage();
+		usage(stderr);
 		exit(EXIT_FAILURE);
 	}
 	argc -= optind;
@@ -711,9 +711,9 @@ void fail(char *err_msg, ...) {
 	exit(EXIT_FAILURE);
 }
 
-void usage() {
-	fprintf(stderr, "brightnessctl %s - read and control device brightness.\n\n", VERSION);
-	fprintf(stderr,
+void usage(FILE *stream) {
+	fprintf(stream, "brightnessctl %s - read and control device brightness.\n\n", VERSION);
+	fprintf(stream,
 "Usage: brightnessctl [options] [operation] [value]\n\
 \n\
 Options:\n\
